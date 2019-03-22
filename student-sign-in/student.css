@@ -14,3 +14,14 @@
     max-height: 500px;
     overflow: scroll;
 }
+.present-true{
+    color: aqua;
+    font-weight: bold;
+    font-style: italic;
+    background-color: darkgrey;
+}
+.present-false{
+    color: firebrick;
+    font-weight: bold;
+    background-color: dimgray;
+}
