@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <head>
     <title>Practice Tracker</title>
@@ -63,6 +63,16 @@
                         <label class="form-check-label" for="v1">{{digital}}</label>
                     </div>
 
+                    <div class="form-group">
+                        <input type="checkbox" v-model="completed" id="cl">
+                        <label class="form-check-label" for="cl">{{finished}}</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Notes</label>
+                        <input id="notes" class="form-control" type="text" v-model.lazy="notes">
+                    </div>
+
                     <div>
                         <!-- TODO v-on click event -->
                         <button class="btn btn-primary mt-2" type="button" v-on:click="submit">Add record</button>
@@ -86,6 +96,8 @@
                             <th>How long?</th>
                             <th>Type</th>
                             <th>Digital or traditional?</th>
+                            <th>Is the work completed?</th>
+                            <th>Notes</th>
                         </tr>
                         <!-- TODO display one table row for each activityRecord  -->
                         <tr v-for="record in activityRecords">
@@ -93,6 +105,8 @@
                             <td>{{record.howLong}}</td>
                             <td>{{record.type}}</td>
                             <td>{{record.digitalTraditional}}</td>
+                            <td>{{record.full}}</td>
+                            <td>{{record.notes}}</td>
                         </tr>
                     </table>
                 </div>
@@ -113,7 +127,7 @@
                         {{type}}:{{hours}}
                     </li>
                 </ul>
-                <p>TODO total for each type</p>
+<!--                <p>Total for each type</p>-->
                 
             </div>
         </div>
@@ -136,6 +150,10 @@
                 digital: 'digital',
                 traditional: 'traditional',
                 errors:[],
+                notes:'',
+                completed: false,
+                finished: 'completed',
+                full: '',
             },
             computed:{
                 whenLocal(){
@@ -154,7 +172,7 @@
                     }
                 },
                  totalHoursByType() {
-                    let hourByType = {}
+                    let hourByType = {};
                     this.types.forEach(type =>{
                         let totalForType = this.activityRecords
                             .filter(function (record) {
@@ -180,18 +198,25 @@
                           'than zero.')
                   }
                   if (this.errors.length == 0) {
+                      this.full = this.completed ? 'completed' : 'incomplete';
+
                       let record={
                           when: this.whenLocal,
                           howLong: this.howLong,
                           type: this.type,
-                          digitalTraditional: this.digitalTraditional
+                          digitalTraditional: this.digitalTraditional,
+                          full: this.full,
+                          notes: this.notes
                       };
                       this.activityRecords.push(record);
                       this.activityRecords.sort(function (r1,r2) {
                           return r2.when.getTime()- r1.when.getTime()
                       })
                   }
-              }
+              },
+                checked(completed){
+
+                },
             },
             filters:{
                 lowercase(text){
